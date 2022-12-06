@@ -11,15 +11,15 @@ import static java.util.Collections.emptyList;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final SiteService sites;
+    private final SiteService siteService;
 
-    public UserDetailsServiceImpl(SiteService sites) {
-        this.sites = sites;
+    public UserDetailsServiceImpl(SiteService siteService) {
+        this.siteService = siteService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        Site site = sites.findByLogin(login)
+        Site site = siteService.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException(login));
         return new User(site.getLogin(), site.getPassword(), emptyList());
     }
