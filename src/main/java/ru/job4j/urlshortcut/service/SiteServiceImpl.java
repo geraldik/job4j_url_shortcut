@@ -1,6 +1,6 @@
 package ru.job4j.urlshortcut.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +14,7 @@ import ru.job4j.urlshortcut.repository.SiteRepository;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Slf4j
 public class SiteServiceImpl implements SiteService {
     private final SiteRepository repository;
