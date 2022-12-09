@@ -13,7 +13,5 @@ public interface SiteService {
 
     boolean existsByLogin(String login);
 
-    String generateLogin();
-
     Optional<Site> findByLogin(String login);
 }

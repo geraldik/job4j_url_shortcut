@@ -3,6 +3,7 @@ package ru.job4j.urlshortcut.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.urlshortcut.dto.SiteDomainDto;
@@ -18,6 +19,10 @@ import java.util.Optional;
 public class SiteServiceImpl implements SiteService {
     private final SiteRepository repository;
     private final PasswordEncoder delegatingPasswordEncoder;
+    @Value("${loginLength}")
+    private int loginLength;
+    @Value("${passwordLength}")
+    private int passwordLength;
 
     @Override
     public SiteDto save(SiteDomainDto siteDomainDto) {
@@ -27,7 +32,7 @@ public class SiteServiceImpl implements SiteService {
             return new SiteDto(false, site.get().getLogin(), site.get().getPassword());
         }
         var login = generateLogin();
-        var password = RandomStringUtils.randomAlphanumeric(8);
+        var password = RandomStringUtils.randomAlphanumeric(passwordLength);
         var result = new SiteDto(true, login, password);
         repository.save(
                 new Site(domain, login, delegatingPasswordEncoder.encode(password)));
@@ -44,9 +49,8 @@ public class SiteServiceImpl implements SiteService {
         return repository.existsByLogin(login);
     }
 
-    @Override
-    public String generateLogin() {
-        var login = RandomStringUtils.randomAlphanumeric(8);
+    private String generateLogin() {
+        var login = RandomStringUtils.randomAlphanumeric(loginLength);
         if (existsByLogin(login)) {
             login = generateLogin();
         }

@@ -2,6 +2,7 @@ package ru.job4j.urlshortcut.service;
 
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.job4j.urlshortcut.dto.UrlLongDto;
@@ -20,6 +21,8 @@ import java.util.Optional;
 public class UrlServiceImpl implements UrlService {
     private final UrlRepository urlRepository;
     private final SiteServiceImpl siteService;
+    @Value("${codeLength}")
+    private int codeLength;
 
     @Override
     public UrlShortDto save(UrlLongDto urlLongDto) {
@@ -45,7 +48,7 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String generateShortUrl() {
-        var shortUrl = RandomStringUtils.randomAlphanumeric(8);
+        var shortUrl = RandomStringUtils.randomAlphanumeric(codeLength);
         if (existsByShortUrl(shortUrl)) {
             shortUrl = generateShortUrl();
         }
