@@ -1,7 +1,6 @@
 package ru.job4j.urlshortcut.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,6 +20,7 @@ import java.util.Optional;
 public class UrlServiceImpl implements UrlService {
     private final UrlRepository urlRepository;
     private final SiteServiceImpl siteService;
+    private final RandomCodeService randomCodeService;
     @Value("${codeLength}")
     private int codeLength;
 
@@ -48,7 +48,7 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public String generateShortUrl() {
-        var shortUrl = RandomStringUtils.randomAlphanumeric(codeLength);
+        var shortUrl = randomCodeService.generateCode(codeLength);
         if (existsByShortUrl(shortUrl)) {
             shortUrl = generateShortUrl();
         }

@@ -1,4 +1,4 @@
-    package ru.job4j.urlshortcut.security;
+    package ru.job4j.urlshortcut.config;
 
     import lombok.AllArgsConstructor;
     import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@
 
     @EnableWebSecurity
     @AllArgsConstructor
-    public class WebSecurity extends WebSecurityConfigurerAdapter {
+    public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         private final UserDetailsServiceImpl userDetailsService;
         private final PasswordEncoder delegatingPasswordEncoder;
 
