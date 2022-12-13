@@ -76,7 +76,7 @@ public class UrlServiceImpl implements UrlService {
         if (optionalSite.isEmpty()) {
             throw new NoSuchElementException("Please, check Authorization token presence.");
         }
-        var site = getSiteByLogin().get();
+        var site = optionalSite.get();
         return urlRepository.findAllBySite(site).stream()
                 .map(url -> new UrlStatDto(url.getLongUrl(), url.getCallsCounter()))
                 .toList();
