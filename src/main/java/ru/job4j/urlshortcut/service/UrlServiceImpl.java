@@ -2,7 +2,6 @@ package ru.job4j.urlshortcut.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.job4j.urlshortcut.dto.UrlLongDto;
 import ru.job4j.urlshortcut.dto.UrlShortDto;
@@ -19,14 +18,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UrlServiceImpl implements UrlService {
     private final UrlRepository urlRepository;
-    private final SiteServiceImpl siteService;
+    private final UserService userService;
     private final RandomCodeService randomCodeService;
     @Value("${codeLength}")
     private int codeLength;
 
     @Override
     public UrlShortDto save(UrlLongDto urlLongDto) {
-        Optional<Site> byLogin = getSiteByLogin();
+        Optional<Site> optionalSite = userService.getSiteByLogin();
+        if (optionalSite.isEmpty()) {
+            throw new NoSuchElementException("There is no such user with this login");
+        }
         var byLongUrl = this.findByLongUrl(urlLongDto.getUrl());
         var urlShortDto = new UrlShortDto();
         if (byLongUrl.isPresent()) {
@@ -35,7 +37,7 @@ public class UrlServiceImpl implements UrlService {
             return urlShortDto;
         }
         var shortUrl = generateShortUrl();
-        var url = new Url(urlLongDto.getUrl(), shortUrl, byLogin.get());
+        var url = new Url(urlLongDto.getUrl(), shortUrl, optionalSite.get());
         var urlSaved = urlRepository.save(url);
         urlShortDto.setCode(urlSaved.getShortUrl());
         return urlShortDto;
@@ -72,9 +74,9 @@ public class UrlServiceImpl implements UrlService {
 
     @Override
     public List<UrlStatDto> findAllBySite() {
-        var optionalSite = getSiteByLogin();
+        var optionalSite = userService.getSiteByLogin();
         if (optionalSite.isEmpty()) {
-            throw new NoSuchElementException("Please, check Authorization token presence.");
+            throw new NoSuchElementException("There is no such user with this login");
         }
         var site = optionalSite.get();
         return urlRepository.findAllBySite(site).stream()
@@ -82,9 +84,4 @@ public class UrlServiceImpl implements UrlService {
                 .toList();
     }
 
-    @Override
-    public Optional<Site> getSiteByLogin() {
-        var login = SecurityContextHolder.getContext().getAuthentication().getName();
-        return siteService.findByLogin(login);
-    }
 }
