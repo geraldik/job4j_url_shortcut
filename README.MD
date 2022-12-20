@@ -13,13 +13,18 @@
 * Maven 3.x
 * Созданная база данных
 ***
-**Перед запуском проекта:**
+**Запуск проекта**
+
+Используя командную строку:
+
 * создать базу данных с именем ***url_shortcut***
 * поменять login/password в файле src/main/resources/application.properties и src/main/resources/liquibase.properties
+* выполнить в консоле команду `maven install`
+* выполнить в консоле команду java -jar `target/url_shortcut-0.0.1-SNAPSHOT.jar`
 
-**Запуск проекта**
-* выполнить команду *maven install*
-* выполнить команду *java -jar target/url_shortcut-0.0.1-SNAPSHOT.jar*
+Используя Docker:
+* создать необходимые docker образы `docker-compose build`
+* запустить проект `docker-compose up -d`
 
 **Работа с приложением**
 
