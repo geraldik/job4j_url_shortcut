@@ -23,7 +23,6 @@
 * выполнить в консоле команду java -jar `target/url_shortcut-0.0.1-SNAPSHOT.jar`
 
 Используя Docker:
-* выполнить в консоле команду `mvn install`
 * создать необходимые docker образы `docker-compose build`
 * запустить проект `docker-compose up -d`
 

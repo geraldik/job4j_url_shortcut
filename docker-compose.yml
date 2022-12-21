@@ -14,13 +14,15 @@ services:
       - "5432:5432"
     restart: always
   app:
-    image: shortcut
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: shortcut
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/url_shortcut
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=password
     ports:
-      - "127.0.0.1:80:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       - db
